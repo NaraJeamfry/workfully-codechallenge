@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: Bank Account API
+  description: >
+    API for management of a Bank Account. This is based on the 
+    [Bank Kata](https://github.com/sandromancuso/Bank-kata) and has been developed for the Workfully 
+    technical interview.
+  contact:
+    name: Marc López Baz
+    email: jeamfry@jeamfry.com
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3300'
+paths:
+  /deposit/{accountId}:
+    post:
+      operationId: accountDeposit
+      summary: Deposit money
+      description: Deposit a given amount of money into the given Account.
+      tags:
+        - Account
+      parameters:
+        - $ref: "#/components/parameters/accountId"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/DepositRequest"
+      responses:
+        201:
+          description: Deposit processed successfully.
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Deposit"
+        400:
+          description: An error ocurred while processing the deposit.
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/GenericError"
+              examples:
+                limitExceeded:
+                  summary: Daily deposit limit exceeded
+                  value:
+                    errorCode: depositLimitExceeded
+                    errorMessage: You have exceeded the daily deposit limit.
+                notFound:
+                  summary: Account not found
+                  value:
+                    errorCode: accountNotFound
+                    errorMessage: The given account ID was not found.
+  /withdraw/{accountId}:
+    post:
+      operationId: accountWithdraw
+      summary: Withdraw money
+      description: Withdraw a given amount of money from the given Account.
+      tags:
+        - Account
+      parameters:
+        - $ref: "#/components/parameters/accountId"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/WithdrawRequest"
+      responses:
+        201:
+          description: Withdrawal processed successfully.
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Withdrawal"
+        400:
+          description: An error occurred while processing withdrawal.
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/GenericError"
+              examples:
+                insufficientBalance:
+                  summary: Not enough balance
+                  value:
+                    errorCode: insufficientBalance
+                    errorMessage: The account's balance is too low for the withdrawal.
+  /transfer/{accountId}:
+    post:
+      operationId: accountTransfer
+      summary: Transfer money
+      description: Transfer money from your account to a different account.
+      tags:
+        - Account
+      parameters:
+        - $ref: "#/components/parameters/accountId"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/TransferRequest"
+      responses:
+        201:
+          description: Transfer sent successfully.
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Transfer"
+        400:
+          description: An error occurred while sending money.
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/GenericError"
+              examples:
+                insufficientBalance:
+                  summary: Not enough balance
+                  value:
+                    errorCode: insufficientBalance
+                    errorMessage: The account's balance is too low for the transfer.
+  /status/{accountId}:
+    get:
+      operationId: accountStatus
+      summary: Get current account status
+      description: Returns the current status for the requested Account.
+      tags:
+        - Extra
+      parameters:
+        - $ref: "#/components/parameters/accountId"
+      responses:
+        200:
+          description: Account successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountStatus"
+        400:
+          description: An error occurred while retrieving the account status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericError"
+components:
+  parameters:
+    accountId:
+      name: accountId
+      in: path
+      description: The ID for the Account.
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    DepositRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          description: Amount to deposit to your account.
+      required:
+        - amount
+      example:
+        amount: 1234.56
+    Deposit:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+          description: Amount deposited.
+        balance:
+          type: number
+          format: float
+          description: Balance after the deposit.
+      required:
+        - accountId
+        - amount
+        - balance
+      example:
+        accountId: "2ab918d0-c600-4477-ac22-0842907e553f"
+        amount: 1234.56
+        balance: 2234.56
+    WithdrawRequest:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          description: Amount to withdraw from your account.
+      required:
+        - amount
+      example:
+        amount: 42.42
+    Withdrawal:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+          description: Amount withdrawn from your account.
+        balance:
+          type: number
+          format: float
+          description: Balance after the withdrawal.
+      required:
+        - accountId
+        - amount
+        - balance
+      example:
+        accountId: "6d3d2f0e-7e06-4e3d-bcd3-c0177a2ec549"
+        amount: 42.42
+        balance: 1042.42
+    TransferRequest:
+      type: object
+      properties:
+        toAccount:
+          type: string
+          format: uuid
+          description: Account that will receive the money.
+        amount:
+          type: number
+          format: float
+          description: Amount to send to the `toAccount`.
+      required:
+        - toAccount
+        - amount
+      example:
+        fromAccount: "5a1bd11b-0e56-433f-91cc-f4eb5710882d"
+        toAccount: "e710a3d6-94da-4165-bac4-a21599785bae"
+    Transfer:
+      type: object
+      properties:
+        fromAccount:
+          type: string
+          format: uuid
+          description: Account that sent the money.
+        toAccount:
+          type: string
+          format: uuid
+          description: Account that received the money.
+        amount:
+          type: number
+          format: float
+          description: Amount transferred from `fromAccount` to `toAccount`.
+        balance:
+          type: number
+          format: float
+          description: Balance of the `fromAccount` after the transfer.
+    AccountStatus:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        balance:
+          type: number
+          format: float
+        depositedToday:
+          type: number
+          format: float
+          description: Amount deposited today. An account may have a limit to deposits per day; check the limits object.
+        limits:
+          type: object
+          description: Current limits for the account.
+          properties:
+            dailyDeposit:
+              type: number
+              format: float
+            overdraft:
+              type: number
+              format: float
+      required:
+        - accountId
+        - balance
+        - limits
+      example:
+        accountId: "66013ace-d51e-45a2-aec8-2924f7a1861e"
+        balance: 1337.20
+        depositedToday: 0.00
+        limits:
+          dailyDeposit: 5000.00
+          overdraft: 200.00
+    GenericError:
+      type: object
+      description: An error occurred. This object holds info about the error.
+      properties:
+        errorCode:
+          type: string
+          description: Internal error code to identify different errors.
+        errorMessage:
+          type: string
+          description: User-readable error message in English, explaining more details.
+      required:
+        - errorCode
+        - errorMessage

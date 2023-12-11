@@ -1,37 +1,30 @@
 # Bank Account API
-Develop a Bank REST API using Node.js, with the following functionalities
 
-### Deposit
+This is an API that fulfills three example basic actions for a Bank Account. It 
+has been developed with NodeJS following the Workfully Code Challenge repo, 
+available on [GitHub](https://github.com/Workfully-github/codechallenge).
 
-`/deposit` with **accountId** and **amount** as parameters 
+## How to run
 
-### Withdrawal
+### API service
 
-`/withdraw` with **accountId** and **amount** as parameters
+To run the API service, build and run the base Dockerfile available in the root
+of the repo:
 
-### Transfer
+```shell
+docker build --tag 'workfully-codechallenge' .
+docker run --p '13465:3300' 'workfully-codechallenge'  
+```
 
-`/transfer` with **fromAccountId** **toAccountId** and **amount** as parameters
+### API tests
 
-## Considerations 
-* Deposits can not be above $5000 per day.
-* Withdrawal supports a $200 overdraft (balance, can be down to -$200).
-* Transfers don’t support overdrafts (can’t leave the balance below 0).
-* Add the validations and errors you see necessary.
-* The Account entity is not the main focus of the exercise, so only add what’s needed for the functionalities above.
-* The code provided is a boilerplate to save you some time. Feel free to change it as you see fit
+This project uses Schemathesis to validate the API as well as run some basic
+tests based on the API spec examples. To run it, just run this docker command:
 
-`When in doubt, don’t get blocked. Fill in the gaps and just write down in a Readme file whatever considerations or design decisions you had to make.`
+```shell
+docker run -v J:\Development\codechallenge:/app \
+    --name workfully-schemathesis \
+    --pull missing --network host schemathesis/schemathesis:stable \
+    run --checks all --base-url http://localhost:13465 /app/docs/bank_api.yaml
+```
 
-## What we value
-* Testing Strategy
-* Effective Architectural decisions
-* Effective response/error handling
-* Simple design
-* GIT
-* Straightforward setup and execution
-## The Extra Mile
-* Database management
-* Docker
-
-Inspired by [Bank Kata](https://github.com/sandromancuso/Bank-kata)
