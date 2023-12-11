@@ -14,12 +14,13 @@ RUN npm run build
 FROM node:slim
 
 ENV NODE_ENV production
-USER node
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 RUN npm ci --production
+
+USER node
 
 COPY --from=builder /usr/src/app/dist ./dist
 
