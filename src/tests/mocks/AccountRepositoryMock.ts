@@ -7,29 +7,30 @@ import { AccountRepository } from "../../business/interfaces/AccountRepository"
 
 
 export class AccountRepositoryMock implements AccountRepository {
-    accounts: Map<string, AccountStatus> = new Map()
+    accounts: Map<string, Account> = new Map()
 
     addAccount(accountId: string, balance: number = 1000.0,
-               depositedToday: number = 0.0) {
-        const account = new AccountStatus()
+               depositedToday: number = 0.0, lastDepositDay: Date | null = null) {
+        const account = new Account()
         account.accountId = accountId
         account.balance = balance
         account.depositedToday = depositedToday
-        account.limits = new AccountLimits()
-        account.limits.dailyDeposit = 5000.0
-        account.limits.overdraft = 200.0
-        this.accounts.set(account.accountId, account)
+        account.lastDepositDay = lastDepositDay ?? new Date()
     }
 
     removeAccount(accountId: string) {
         this.accounts.delete(accountId)
     }
 
-    getAccount(accountId: string): Promise<AccountStatus> {
+    getAccount(accountId: string): Promise<Account> {
         if(this.accounts.has(accountId)) {
             return Promise.resolve(this.accounts.get(accountId)!)
         } else {
             throw new Error("The account was not found")
         }
+    }
+
+    saveAccount(account: Account): Promise<boolean> {
+        return Promise.resolve(false)
     }
 }

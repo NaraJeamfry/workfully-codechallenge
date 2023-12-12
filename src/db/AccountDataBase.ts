@@ -1,7 +1,7 @@
-import { AccountRepository } from "../business/interfaces/AccountRepository";
-import { AccountLimits, AccountStatus } from "../business/entities/Account";
-import { appConfig } from "../config";
-import { randomUUID } from "node:crypto";
+import { AccountRepository } from "../business/interfaces/AccountRepository"
+import { Account } from "../business/entities/Account"
+import { appConfig } from "../config"
+import { randomUUID } from "node:crypto"
 
 export class AccountDataBase implements AccountRepository {
     constructor() {
@@ -10,15 +10,16 @@ export class AccountDataBase implements AccountRepository {
         console.log(`Repository: Connected successfully to DB, ready to send queries.`)
     }
 
-    getAccount(accountId: string): Promise<AccountStatus> {
-        const account = new AccountStatus();
-        account.accountId = randomUUID();
-        account.balance = 1000.0;
-        account.depositedToday = 0;
-        account.limits = new AccountLimits();
-        account.limits.dailyDeposit = appConfig.dailyDepositLimit;
-        account.limits.overdraft = appConfig.overdraftLimit;
-        return Promise.resolve(account);
+    getAccount(accountId: string): Promise<Account | null> {
+        const account = new Account()
+        account.accountId = accountId
+        account.balance = 1000.0
+        account.depositedToday = 0
+        return Promise.resolve(account)
+    }
+
+    saveAccount(account: Account): Promise<boolean> {
+        return Promise.resolve(false)
     }
 
 }

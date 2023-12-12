@@ -64,3 +64,18 @@ Architecture, trying to maintain the following rules:
 * Dependency management has been implemented with Brandi, using Dependency
   Injection. The `app/container.ts` file is currently used to bind instances,
   and in future commits I'll implement different bindings for tests (mocks).
+
+## Error management
+
+I have decided to have specific errors for things like accounts not founds, but
+only internally. The WebApi component decides that it's dangerous to share that
+information and will obscure that information for the final user.
+
+## Business design
+
+* The solution to calculate daily deposits is a compromise between simplicity 
+  and security. We want to maximize the stored information about user deposits
+  for traceability and support but also want to simplify as much possible, so 
+  even though the ideal solution would be to store all deposits separately, with
+  the proposed solution we can still know how many deposits a user did on the 
+  last day they deposited while minimizing data stored.
