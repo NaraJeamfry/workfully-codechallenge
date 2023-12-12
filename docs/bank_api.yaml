@@ -83,6 +83,11 @@ paths:
                   value:
                     errorCode: insufficientBalance
                     errorMessage: The account's balance is too low for the withdrawal.
+                notFound:
+                  summary: Account not found
+                  value:
+                    errorCode: accountNotFound
+                    errorMessage: The given account ID was not found.
   /transfer/{accountId}:
     post:
       operationId: accountTransfer
@@ -116,6 +121,11 @@ paths:
                   value:
                     errorCode: insufficientBalance
                     errorMessage: The account's balance is too low for the transfer.
+                notFound:
+                  summary: Account not found
+                  value:
+                    errorCode: accountNotFound
+                    errorMessage: The given account ID was not found.
   /account/{accountId}:
     get:
       operationId: accountStatus
@@ -140,7 +150,7 @@ paths:
                 $ref: "#/components/schemas/GenericError"
               examples:
                 notFound:
-                  description: Account not found
+                  summary: Account not found
                   value:
                     errorCode: accountNotFound
                     errorMessage: The account was not found

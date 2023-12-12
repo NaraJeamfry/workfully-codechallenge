@@ -1,7 +1,7 @@
-import { AccountsApi } from "../api/AccountsApi";
-import { AccountsService } from "../business/usecases/AccountsService";
-import { injected } from "brandi";
-import { TOKENS } from "./container.types";
+import { AccountsApi } from "../api/AccountsApi"
+import { AccountsService } from "../business/usecases/AccountsService"
+import { injected } from "brandi"
+import { TOKENS } from "./container.types"
 
 export class AccountsApplication {
     constructor(
@@ -14,8 +14,13 @@ export class AccountsApplication {
         this.accountsApi.initializeAccountStatus(
             // Functions sent as reference need to be "arrowed" to keep a correct `this` context
             (accountId) => this.accountsService.getAccountStatus(accountId)
-        );
+        )
         console.log(`Application: Initialized successfully.`)
+    }
+
+    shutdown() {
+        this.accountsApi.shutdown()
+        console.log(`Closing application...`)
     }
 }
 

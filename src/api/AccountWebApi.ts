@@ -1,25 +1,27 @@
-import express, { Express, Request, response, Response } from "express";
-import { Server, IncomingMessage, ServerResponse } from "http";
-import { appConfig } from "../config";
-import { AccountsApi } from "./AccountsApi";
-import { AccountStatus } from "../business/entities/Account";
+import express, { Express, Request, response, Response } from "express"
+import { Server, IncomingMessage, ServerResponse } from "http"
+import { appConfig } from "../config"
+import { AccountsApi } from "./AccountsApi"
+import { AccountStatus } from "../business/entities/Account"
 
 
 export class AccountWebApi implements AccountsApi {
-    public readonly express: Express = express();
-    private readonly port: Number;
-    private server: Server | undefined;
+    public readonly express: Express = express()
+    private readonly port: Number
+    private server: Server | undefined
 
     constructor() {
-        this.port = appConfig.serverPort;
+        this.port = appConfig.serverPort
 
         this.server = this.express.listen(this.port)
-        console.log(`WebApi: Listening to port ${this.port}...`)
+        console.log(`WebApi: Listening on port ${this.port}.`)
+        this.express.use(express.json())
+        console.log(`WebApi: Enabled JSON body parser.`)
     }
 
-    stop(): void {
+    shutdown(): void {
         console.log(`WebApi: Closing server...`)
-        this.server?.close();
+        this.server?.close()
     }
 
     initializeAccountStatus(accountStatus: (accountId: string) => Promise<AccountStatus>): void {
