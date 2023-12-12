@@ -1,7 +1,7 @@
 # Bank Account API
 
 This is an API that fulfills three example basic actions for a Bank Account. It 
-has been developed with NodeJS following the Workfully Code Challenge repo, 
+has been developed with Node.js following the Workfully Code Challenge repo, 
 available on [GitHub](https://github.com/Workfully-github/codechallenge).
 
 ## How to run

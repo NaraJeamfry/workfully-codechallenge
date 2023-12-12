@@ -1,5 +1,5 @@
 import { createProdConfig } from "./envs/prod";
-import { createTestConfig } from "./envs/test";
+import { createTestConfig } from "./envs/testing";
 import { createLocalConfig } from "./envs/local";
 
 export const appConfig = getConfig();

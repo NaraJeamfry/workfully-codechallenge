@@ -1,9 +1,6 @@
 import express, { Express, Request, response, Response } from "express";
 import { Server, IncomingMessage, ServerResponse } from "http";
-import { injected } from "brandi";
-import { TOKENS } from "../app/container.types";
 import { appConfig } from "../config";
-import { AccountsService } from "../business/usecases/AccountsService";
 import { AccountsApi } from "./AccountsApi";
 import { AccountStatus } from "../business/entities/Account";
 
@@ -13,7 +10,7 @@ export class AccountWebApi implements AccountsApi {
     private readonly port: Number;
     private server: Server | undefined;
 
-    constructor(accountsService: AccountsService) {
+    constructor() {
         this.port = appConfig.serverPort;
 
         this.server = this.express.listen(this.port)
@@ -33,5 +30,3 @@ export class AccountWebApi implements AccountsApi {
         })
     }
 }
-
-injected(AccountWebApi, TOKENS.accountsService)
