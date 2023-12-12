@@ -5,6 +5,22 @@ development of this project. These are just the things I feel could be
 interesting to do differently depending on real-life variables on a real 
 project.
 
+## Setup and execution
+
+To avoid having to install further dependencies, and knowing that the 
+boilerplate already had a more-or-less working Dockerfile, I have not used 
+anything more complex. 
+
+Two options I have considered is using shell scripts/package.json to store
+commands for running testing and similar things; and using docker-compose to run
+docker images like Schemathesis.
+
+I have decided to avoid both of these options, because they could prove to not
+be "future-proof" for CI/CD and/or require additional tooling that may not be 
+compatible with some systems. For example, the current "script-in-docs" approach
+works for systems that use Podman with an alias, and can be integrated with any
+CI/CD runner quickly.
+
 ## Documentation-first approach
 
 * Everything is implemented following a doc-first approach, and will be

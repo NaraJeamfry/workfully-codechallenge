@@ -28,6 +28,16 @@ docker run -v J:\Development\codechallenge:/app \
     run --checks all --base-url http://localhost:13465 /app/docs/bank_api.yaml
 ```
 
+### Node.js tests
+
+If you don't have a working Node.js environment in your machine, you can use
+the following command to run the Jest test runner through Docker:
+
+```shell
+docker build --tag 'workfully-codechallenge-builder' .
+docker run 'workfully-codechallenge-builder' APP_ENV=test npm test
+```
+
 ### Update API schemas
 
 The API schemas, located at `src/api/schema.d.ts` are auto-generated from the 

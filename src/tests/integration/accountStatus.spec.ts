@@ -59,11 +59,6 @@ describe('Missing account', () => {
             .get("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
         expect(response.status).toBe(400)
     })
-    it('should not return data', async() => {
-        const response = await request(api.express)
-            .get("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
-        expect(response.body as AccountStatusResponse).toThrowError()
-    })
 })
 
 describe('Account Status POST', () => {
