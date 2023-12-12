@@ -1,5 +1,5 @@
 import { AccountsApi } from "../api/AccountsApi"
-import { AccountsService } from "../business/usecases/AccountsService"
+import { AccountsService } from "../business/interfaces/AccountsService"
 import { injected } from "brandi"
 import { TOKENS } from "./container.types"
 
@@ -7,7 +7,8 @@ export class AccountsApplication {
     constructor(
         private accountsApi: AccountsApi,
         private accountsService: AccountsService,
-    ) { }
+    ) {
+    }
 
     init() {
         console.log(`Application: Initializing application APIs...`)

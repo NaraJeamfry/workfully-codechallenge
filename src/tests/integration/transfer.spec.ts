@@ -14,19 +14,25 @@ container.get(TOKENS.accountsApplication).init()
 
 describe('Successful transfer', () => {
     beforeEach(async () => {
-        db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 1000.0)
-        db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
+        await db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 1000.0)
+        await db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
     })
     it('should respond 200', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         expect(response.status).toBe(200)
     })
     it('should return the correct account IDs', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         const body = response.body as TransferResponse
         expect(body.fromAccount).toBe("2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
         expect(body.toAccount).toBe("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45")
@@ -34,14 +40,20 @@ describe('Successful transfer', () => {
     it('should return the correct amount', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         const body = response.body as TransferResponse
         expect(body.amount).toBe(200.0)
     })
     it('should return the updated balance for the from account', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         const body = response.body as TransferResponse
         expect(body.balance).toBe(800.0)
     })
@@ -53,19 +65,25 @@ describe('Successful transfer', () => {
 
 describe('Transfer from accounts without enough funds', () => {
     beforeEach(async () => {
-        db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 100.0)
-        db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
+        await db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 100.0)
+        await db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
     })
     it('should respond 400 if exceed overdraft', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 1000.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 1000.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         expect(response.status).toBe(400)
     })
     it('should respond 400 even if within overdraft', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         expect(response.status).toBe(400)
     })
     afterEach(async () => {
@@ -76,13 +94,16 @@ describe('Transfer from accounts without enough funds', () => {
 
 describe('Transfer from accounts in overdraft', () => {
     beforeEach(async () => {
-        db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", -100.0)
-        db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
+        await db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", -100.0)
+        await db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
     })
     it('should respond 400', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 10.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 10.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         expect(response.status).toBe(400)
     })
     afterEach(async () => {
@@ -93,12 +114,15 @@ describe('Transfer from accounts in overdraft', () => {
 
 describe('Transfer where toAccount does not exist', () => {
     beforeEach(async () => {
-        db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 1000.0)
+        await db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 1000.0)
     })
     it('should respond 400', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         expect(response.status).toBe(400)
     })
     afterEach(async () => {
@@ -108,12 +132,15 @@ describe('Transfer where toAccount does not exist', () => {
 
 describe('Transfer where fromAccount does not exist', () => {
     beforeEach(async () => {
-        db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 1000.0)
+        await db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 1000.0)
     })
     it('should respond 400', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
-            .send({ amount: 200.0, toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"})
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
         expect(response.status).toBe(400)
     })
     afterEach(async () => {
@@ -122,7 +149,7 @@ describe('Transfer where fromAccount does not exist', () => {
 })
 
 describe('GET Transfer', () => {
-    it('should not be available', async() => {
+    it('should not be available', async () => {
         const response = await request(api.express)
             .get("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
         expect(response.status).toBe(404)

@@ -15,7 +15,7 @@ container.get(TOKENS.accountsApplication).init()
 describe('Successful account status', () => {
     beforeEach(async () => {
         // Initialize mocked account
-        db.addAccount("e2c9012e-9638-4b56-9863-76424d5200c4", 1500.0,
+        await db.addAccount("e2c9012e-9638-4b56-9863-76424d5200c4", 1500.0,
             200.0)
     })
     it('should respond 200', async () => {
@@ -45,7 +45,10 @@ describe('Successful account status', () => {
         const response = await request(api.express)
             .get("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
         const account = response.body as AccountStatusResponse
-        expect(account.limits).toStrictEqual({ dailyDeposit: 5000.0, overdraft: 200.0 })
+        expect(account.limits).toStrictEqual({
+            dailyDeposit: 5000.0,
+            overdraft: 200.0
+        })
     })
     afterEach(async () => {
         // Remove mocked account to prevent issues and wrong results
@@ -62,7 +65,7 @@ describe('Missing account', () => {
 })
 
 describe('Account Status POST', () => {
-    it('should not be available', async() => {
+    it('should not be available', async () => {
         const response = await request(api.express)
             .post("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
         expect(response.status).toBe(404)

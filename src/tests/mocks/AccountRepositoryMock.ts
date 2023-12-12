@@ -1,36 +1,35 @@
-import {
-    Account,
-    AccountLimits,
-    AccountStatus
-} from "../../business/entities/Account"
+import { Account } from "../../business/entities/Account"
 import { AccountRepository } from "../../business/interfaces/AccountRepository"
+import { AccountNotFoundError } from "../../business/errors"
 
 
 export class AccountRepositoryMock implements AccountRepository {
     accounts: Map<string, Account> = new Map()
 
-    addAccount(accountId: string, balance: number = 1000.0,
-               depositedToday: number = 0.0, lastDepositDay: Date | null = null) {
+    async addAccount(accountId: string, balance: number = 1000.0,
+                     depositedToday: number = 0.0, lastDepositDay: Date | null = null) {
         const account = new Account()
         account.accountId = accountId
         account.balance = balance
         account.depositedToday = depositedToday
         account.lastDepositDay = lastDepositDay ?? new Date()
+        await this.saveAccount(account)
     }
 
     removeAccount(accountId: string) {
         this.accounts.delete(accountId)
     }
 
-    getAccount(accountId: string): Promise<Account> {
-        if(this.accounts.has(accountId)) {
+    async getAccount(accountId: string): Promise<Account | null> {
+        if (this.accounts.has(accountId)) {
             return Promise.resolve(this.accounts.get(accountId)!)
         } else {
-            throw new Error("The account was not found")
+            return null
         }
     }
 
-    saveAccount(account: Account): Promise<boolean> {
-        return Promise.resolve(false)
+    async saveAccount(account: Account): Promise<boolean> {
+        this.accounts.set(account.accountId, account)
+        return Promise.resolve(true)
     }
 }
