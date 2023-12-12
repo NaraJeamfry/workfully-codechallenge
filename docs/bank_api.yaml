@@ -116,7 +116,7 @@ paths:
                   value:
                     errorCode: insufficientBalance
                     errorMessage: The account's balance is too low for the transfer.
-  /status/{accountId}:
+  /account/{accountId}:
     get:
       operationId: accountStatus
       summary: Get current account status
