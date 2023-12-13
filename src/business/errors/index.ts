@@ -12,7 +12,7 @@ export class InsufficientBalanceError extends Error {
     constructor() {
         super("Insufficient Balance")
 
-        Object.setPrototypeOf(this, AccountNotFoundError.prototype)
+        Object.setPrototypeOf(this, InsufficientBalanceError.prototype)
     }
 }
 
@@ -20,6 +20,6 @@ export class DepositLimitExceededError extends Error {
     constructor() {
         super("Deposit Limit Exceeded")
 
-        Object.setPrototypeOf(this, AccountNotFoundError.prototype)
+        Object.setPrototypeOf(this, DepositLimitExceededError.prototype)
     }
 }

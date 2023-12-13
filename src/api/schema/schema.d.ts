@@ -107,8 +107,8 @@ export interface components {
     };
     /**
      * @example {
-     *   "fromAccount": "5a1bd11b-0e56-433f-91cc-f4eb5710882d",
-     *   "toAccount": "e710a3d6-94da-4165-bac4-a21599785bae"
+     *   "toAccount": "e710a3d6-94da-4165-bac4-a21599785bae",
+     *   "amount": 100
      * }
      */
     TransferRequest: {
@@ -123,27 +123,35 @@ export interface components {
        */
       amount: number;
     };
+    /**
+     * @example {
+     *   "fromAccount": "5a1bd11b-0e56-433f-91cc-f4eb5710882d",
+     *   "toAccount": "e710a3d6-94da-4165-bac4-a21599785bae",
+     *   "amount": 100,
+     *   "balance": 900
+     * }
+     */
     Transfer: {
       /**
        * Format: uuid
        * @description Account that sent the money.
        */
-      fromAccount?: string;
+      fromAccount: string;
       /**
        * Format: uuid
        * @description Account that received the money.
        */
-      toAccount?: string;
+      toAccount: string;
       /**
        * Format: float
        * @description Amount transferred from `fromAccount` to `toAccount`.
        */
-      amount?: number;
+      amount: number;
       /**
        * Format: float
        * @description Balance of the `fromAccount` after the transfer.
        */
-      balance?: number;
+      balance: number;
     };
     /**
      * @example {

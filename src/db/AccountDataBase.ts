@@ -11,7 +11,7 @@ export class AccountDataBase implements AccountRepository {
     }
 
     getAccount(accountId: string): Promise<Account | null> {
-        const account = new Account()
+        const account = new Account("a")
         account.accountId = accountId
         account.balance = 1000.0
         account.depositedToday = 0

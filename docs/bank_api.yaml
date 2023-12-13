@@ -246,8 +246,8 @@ components:
         - toAccount
         - amount
       example:
-        fromAccount: "5a1bd11b-0e56-433f-91cc-f4eb5710882d"
         toAccount: "e710a3d6-94da-4165-bac4-a21599785bae"
+        amount: 100.0
     Transfer:
       type: object
       properties:
@@ -267,6 +267,16 @@ components:
           type: number
           format: float
           description: Balance of the `fromAccount` after the transfer.
+      required:
+        - fromAccount
+        - toAccount
+        - amount
+        - balance
+      example:
+        fromAccount: "5a1bd11b-0e56-433f-91cc-f4eb5710882d"
+        toAccount: "e710a3d6-94da-4165-bac4-a21599785bae"
+        amount: 100.0
+        balance: 900.0
     AccountStatus:
       type: object
       properties:
