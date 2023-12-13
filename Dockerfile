@@ -23,10 +23,12 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 RUN npm ci --production
+RUN mkdir db && chown node:node db
 
 USER node
 
 COPY --from=builder /usr/src/app/dist ./dist
+COPY ./migrations ./migrations
 
 EXPOSE 3300
 CMD [ "node", "dist/app/main.js" ]
