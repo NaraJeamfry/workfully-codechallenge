@@ -48,10 +48,10 @@ For the path parameters vs. request parameters:
 * I thought about sending oldBalance and newBalance after each operation, but I
   feel like it's better to just send the status after the operation, as that
   makes the response more similar to the status request.
-* All errors return an error 400, instead of using the more meaningful 404 for
-  not found and other similar errors. This is because as a bank API, we want to
-  make sure we do not leak *any* information, like existing accounts, to any
-  user.
+* The errors do not cover "PermissionDenied" and similar things, not because we
+  do not have users and auth, but because we want to hide knowledge from bad 
+  actors. API Requests that hit accounts we cannot access should return an
+  AccountNotFound error.
 
 ## Project Architecture
 
