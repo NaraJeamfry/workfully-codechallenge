@@ -86,6 +86,28 @@ describe('Transfer from accounts without enough funds', () => {
             })
         expect(response.status).toBe(400)
     })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 1000.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an insufficientBalance error', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 1000.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("insufficientBalance")
+    })
     afterEach(async () => {
         db.removeAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
         db.removeAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45")
@@ -106,6 +128,28 @@ describe('Transfer from accounts in overdraft', () => {
             })
         expect(response.status).toBe(400)
     })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 10.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an insufficientBalance error', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 10.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("insufficientBalance")
+    })
     afterEach(async () => {
         db.removeAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
         db.removeAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45")
@@ -125,6 +169,28 @@ describe('Transfer where toAccount does not exist', () => {
             })
         expect(response.status).toBe(400)
     })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an insufficientBalance error', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("accountNotFound")
+    })
     afterEach(async () => {
         db.removeAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
     })
@@ -142,6 +208,28 @@ describe('Transfer where fromAccount does not exist', () => {
                 toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
             })
         expect(response.status).toBe(400)
+    })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an insufficientBalance error', async () => {
+        const response = await request(api.express)
+            .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
+            .send({
+                amount: 200.0,
+                toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
+            })
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("accountNotFound")
     })
     afterEach(async () => {
         db.removeAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45")

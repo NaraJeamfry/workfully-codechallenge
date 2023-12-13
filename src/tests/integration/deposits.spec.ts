@@ -60,6 +60,22 @@ describe('Deposits exceeding daily limits', () => {
             .send({amount: 200.0})
         expect(response.status).toBe(400)
     })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+            .send({amount: 200.0})
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return a depositLimitExceeded error', async () => {
+        const response = await request(api.express)
+            .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+            .send({amount: 200.0})
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("depositLimitExceeded")
+    })
     afterEach(async () => {
         db.removeAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
     })
@@ -71,6 +87,22 @@ describe('Deposits for non-existing accounts', () => {
             .post("/deposit/2bacbabe-03bf-4f31-a5cb-55aa7bf950a1")
             .send({amount: 200.0})
         expect(response.status).toBe(400)
+    })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/deposit/2bacbabe-03bf-4f31-a5cb-55aa7bf950a1")
+            .send({amount: 200.0})
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an accountNotFound error', async () => {
+        const response = await request(api.express)
+            .post("/deposit/2bacbabe-03bf-4f31-a5cb-55aa7bf950a1")
+            .send({amount: 200.0})
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("accountNotFound")
     })
 })
 

@@ -62,6 +62,20 @@ describe('Missing account', () => {
             .get("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
         expect(response.status).toBe(400)
     })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .get("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an insufficientBalance error', async () => {
+        const response = await request(api.express)
+            .get("/account/e2c9012e-9638-4b56-9863-76424d5200c4")
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("accountNotFound")
+    })
 })
 
 describe('Account Status POST', () => {

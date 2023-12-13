@@ -55,6 +55,22 @@ describe('Withdrawals for a non-existing account', () => {
             .send({amount: 200.0})
         expect(response.status).toBe(200)
     })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
+            .send({amount: 200.0})
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an accountNotFound error', async () => {
+        const response = await request(api.express)
+            .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
+            .send({amount: 200.0})
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("accountNotFound")
+    })
 })
 
 describe('Withdrawal that leave the account in valid overdraft', () => {
@@ -88,6 +104,22 @@ describe('Withdrawal that exceed the overdraft limit', () => {
             .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
             .send({amount: 300.0})
         expect(response.status).toBe(400)
+    })
+    it('should return a valid GenericError', async () => {
+        const response = await request(api.express)
+            .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
+            .send({amount: 300.0})
+        expect(response.body).toEqual(expect.objectContaining({
+            errorCode: expect.any(String),
+            errorMessage: expect.any(String),
+        }))
+    })
+    it('should return an insufficientBalance error', async () => {
+        const response = await request(api.express)
+            .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
+            .send({amount: 300.0})
+        expect(response.body).toHaveProperty("errorCode")
+        expect(response.body.errorCode).toBe("insufficientBalance")
     })
     afterEach(async () => {
         db.removeAccount("f71c8140-95dd-4077-a7fc-2326383a512a")
