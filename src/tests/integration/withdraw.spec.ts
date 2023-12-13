@@ -2,10 +2,8 @@ import { container } from "../../app/container"
 import { TOKENS } from "../../app/container.types"
 import { AccountRepositoryMock } from "../mocks/AccountRepositoryMock"
 import { AccountWebApi } from "../../api/AccountWebApi"
-import { components } from "../../api/schema"
 import request from "supertest"
-
-type WithdrawResponse = components["schemas"]["Withdrawal"]
+import { WithdrawResponse } from "../../api/schema"
 
 container.bind(TOKENS.accountRepository).toInstance(AccountRepositoryMock).inSingletonScope()
 const api = container.get(TOKENS.accountsApi) as AccountWebApi
@@ -16,11 +14,11 @@ describe('Successful withdrawal', () => {
     beforeEach(async () => {
         await db.addAccount("f71c8140-95dd-4077-a7fc-2326383a512a", 1000.0)
     })
-    it('should respond 200', async () => {
+    it('should respond 201', async () => {
         const response = await request(api.express)
             .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
             .send({amount: 200.0})
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(201)
     })
     it('should return the correct account ID', async () => {
         const response = await request(api.express)
@@ -77,11 +75,11 @@ describe('Withdrawal that leave the account in valid overdraft', () => {
     beforeEach(async () => {
         await db.addAccount("f71c8140-95dd-4077-a7fc-2326383a512a", 10.0)
     })
-    it('should respond 200', async () => {
+    it('should respond 201', async () => {
         const response = await request(api.express)
             .post("/withdraw/f71c8140-95dd-4077-a7fc-2326383a512a")
             .send({amount: 200.0})
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(201)
     })
     it('should return the updated, negative balance', async () => {
         const response = await request(api.express)

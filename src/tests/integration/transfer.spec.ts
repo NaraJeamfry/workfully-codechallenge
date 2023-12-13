@@ -2,10 +2,8 @@ import { container } from "../../app/container"
 import { TOKENS } from "../../app/container.types"
 import { AccountRepositoryMock } from "../mocks/AccountRepositoryMock"
 import { AccountWebApi } from "../../api/AccountWebApi"
-import { components } from "../../api/schema"
 import request from "supertest"
-
-type TransferResponse = components["schemas"]["Transfer"]
+import { TransferResponse } from "../../api/schema"
 
 container.bind(TOKENS.accountRepository).toInstance(AccountRepositoryMock).inSingletonScope()
 const api = container.get(TOKENS.accountsApi) as AccountWebApi
@@ -17,14 +15,14 @@ describe('Successful transfer', () => {
         await db.addAccount("2ea5a7a1-338a-4963-8f16-aca7c60a6c61", 1000.0)
         await db.addAccount("3596ec98-3e61-4ed5-ae88-ee42bbd3cc45", 0.0)
     })
-    it('should respond 200', async () => {
+    it('should respond 201', async () => {
         const response = await request(api.express)
             .post("/transfer/2ea5a7a1-338a-4963-8f16-aca7c60a6c61")
             .send({
                 amount: 200.0,
                 toAccount: "3596ec98-3e61-4ed5-ae88-ee42bbd3cc45"
             })
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(201)
     })
     it('should return the correct account IDs', async () => {
         const response = await request(api.express)

@@ -1,6 +1,5 @@
-import { components } from "../schema"
+import { GenericError } from "../schema"
 
-type GenericError = components["schemas"]["GenericError"]
 
 export class ApiError extends Error {
     statusCode: number
@@ -13,6 +12,9 @@ export class ApiError extends Error {
     }
 
     getErrorSchema() {
-        return { errorCode: this.errorCode, errorMessage: this.message } as GenericError
+        return {
+            errorCode: this.errorCode,
+            errorMessage: this.message
+        } as GenericError
     }
 }

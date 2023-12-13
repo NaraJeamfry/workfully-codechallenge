@@ -14,7 +14,7 @@ export class AccountsUseCases implements AccountsService {
         this.accountRepository = accountRepository
     }
 
-    async getAccountStatus(accountId: string): Promise<AccountStatus> {
+    async accountStatus(accountId: string): Promise<AccountStatus> {
         const account = await this.accountRepository.getAccount(accountId)
         if (account === null) {
             throw new AccountNotFoundError()

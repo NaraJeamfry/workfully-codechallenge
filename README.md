@@ -44,7 +44,7 @@ The API schemas, located at `src/api/schema.d.ts` are auto-generated from the
 OpenAPI Specification. To re-generate them after changes, run this command:
 
 ```shell
-npx openapi-typescript docs/bank_api.yaml -o src/api/schema.d.ts
+npx openapi-typescript docs/bank_api.yaml -o src/api/schema/schema.d.ts
 ```
 
 ## Configuration

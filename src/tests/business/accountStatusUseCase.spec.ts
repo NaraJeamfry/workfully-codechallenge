@@ -11,20 +11,20 @@ describe('Get existing account status', () => {
             0.0)
     })
     it('should return', async () => {
-        const status = await service.getAccountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
+        const status = await service.accountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
         expect(status).toBeDefined()
     })
     it('should return the correct account ID', async () => {
-        const status = await service.getAccountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
+        const status = await service.accountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
         expect(status.accountId).toBe("d447add1-b61d-4958-bcfe-3746b9307cdc")
     })
     it('should return valid account data', async () => {
-        const status = await service.getAccountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
+        const status = await service.accountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
         expect(status.balance).toBe(1000.0)
         expect(status.depositedToday).toBe(0.0)
     })
     it('should return the account limits', async () => {
-        const status = await service.getAccountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
+        const status = await service.accountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc")
         expect(status.limits).toBeDefined()
         expect(status.limits.overdraft).toBe(200.0)
         expect(status.limits.dailyDeposit).toBe(5000.0)
@@ -36,7 +36,7 @@ describe('Get existing account status', () => {
 
 describe('Get non-existing account status', () => {
     it('should throw an error', async () => {
-        await expect(async () => { await service.getAccountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc") })
+        await expect(async () => { await service.accountStatus("d447add1-b61d-4958-bcfe-3746b9307cdc") })
             .rejects
             .toThrow(AccountNotFoundError)
     })

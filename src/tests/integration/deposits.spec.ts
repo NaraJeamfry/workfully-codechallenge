@@ -3,9 +3,7 @@ import { container } from "../../app/container"
 import { TOKENS } from "../../app/container.types"
 import { AccountWebApi } from "../../api/AccountWebApi"
 import { AccountRepositoryMock } from "../mocks/AccountRepositoryMock"
-import { components } from "../../api/schema"
-
-type DepositResponse = components["schemas"]["Deposit"]
+import { DepositResponse } from "../../api/schema"
 
 container.bind(TOKENS.accountRepository).toInstance(AccountRepositoryMock).inSingletonScope()
 const api = container.get(TOKENS.accountsApi) as AccountWebApi
@@ -17,11 +15,11 @@ describe('Successful deposit', () => {
         await db.addAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed",
             1000.0, 3000.0)
     })
-    it('should respond 200', async () => {
+    it('should respond 201', async () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
-        expect(response.status).toBe(200)
+        expect(response.status).toBe(201)
     })
     it('should return a correct account ID', async () => {
         const response = await request(api.express)

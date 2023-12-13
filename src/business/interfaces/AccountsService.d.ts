@@ -12,7 +12,7 @@ export interface AccountsService {
      * @param accountId the account to fetch the status from
      * @throws AccountNotFoundError if the account cannot be found
      */
-    getAccountStatus(accountId: string): Promise<AccountStatus>
+    accountStatus(accountId: string): Promise<AccountStatus>
 
     /**
      * Deposit money into an account.

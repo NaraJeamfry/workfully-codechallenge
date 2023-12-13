@@ -220,7 +220,7 @@ export interface operations {
           "application/json": components["schemas"]["Deposit"];
         };
       };
-      /** @description An error ocurred while processing the deposit. */
+      /** @description An error occurred while processing the deposit. */
       400: {
         content: {
           "application/json": components["schemas"]["GenericError"];

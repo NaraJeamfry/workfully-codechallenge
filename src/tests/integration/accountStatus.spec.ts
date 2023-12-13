@@ -3,9 +3,7 @@ import { container } from "../../app/container"
 import { TOKENS } from "../../app/container.types"
 import request from "supertest"
 import { AccountRepositoryMock } from "../mocks/AccountRepositoryMock"
-import { components } from "../../api/schema"
-
-type AccountStatusResponse = components["schemas"]["AccountStatus"]
+import { AccountStatusResponse } from "../../api/schema"
 
 container.bind(TOKENS.accountRepository).toInstance(AccountRepositoryMock).inSingletonScope()
 const api = container.get(TOKENS.accountsApi) as AccountWebApi
