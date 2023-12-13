@@ -4,9 +4,13 @@ import {
     AccountNotFoundError,
     DepositLimitExceededError
 } from "../../business/errors"
+import {
+    AccountInMemoryLockProvider
+} from "../../db/AccountInMemoryLockProvider"
 
 const db = new AccountRepositoryMock()
-const service = new AccountsUseCases(db)
+const lockProvider = new AccountInMemoryLockProvider()
+const service = new AccountsUseCases(db, lockProvider)
 
 describe('Deposit on existing account', () => {
     beforeEach(async () => {

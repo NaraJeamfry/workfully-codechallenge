@@ -1,9 +1,13 @@
 import { AccountRepositoryMock } from "../mocks/AccountRepositoryMock"
 import { AccountsUseCases } from "../../business/usecases/AccountsUseCases"
 import { AccountNotFoundError } from "../../business/errors"
+import {
+    AccountInMemoryLockProvider
+} from "../../db/AccountInMemoryLockProvider"
 
 const db = new AccountRepositoryMock()
-const service = new AccountsUseCases(db)
+const lockProvider = new AccountInMemoryLockProvider()
+const service = new AccountsUseCases(db, lockProvider)
 
 describe('Get existing account status', () => {
     beforeEach(async () => {

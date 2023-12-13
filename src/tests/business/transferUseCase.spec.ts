@@ -5,9 +5,13 @@ import {
     InsufficientBalanceError
 } from "../../business/errors"
 import { after } from "node:test"
+import {
+    AccountInMemoryLockProvider
+} from "../../db/AccountInMemoryLockProvider"
 
 const db = new AccountRepositoryMock()
-const service = new AccountsUseCases(db)
+const lockProvider = new AccountInMemoryLockProvider()
+const service = new AccountsUseCases(db, lockProvider)
 
 describe('Successful transfer', () => {
     beforeEach(async () => {
