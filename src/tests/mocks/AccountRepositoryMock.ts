@@ -8,11 +8,11 @@ export class AccountRepositoryMock implements AccountRepository {
 
     async addAccount(accountId: string, balance: number = 1000.0,
                      depositedToday: number = 0.0, lastDepositDay: Date | null = null) {
-        const account = new Account()
-        account.accountId = accountId
-        account.balance = balance
-        account.depositedToday = depositedToday
-        account.lastDepositDay = lastDepositDay ?? new Date()
+        const account = new Account(accountId, {
+            balance,
+            depositedToday,
+            lastDepositDay: lastDepositDay ?? new Date()
+        })
         await this.saveAccount(account)
     }
 

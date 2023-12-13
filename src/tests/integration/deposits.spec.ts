@@ -19,28 +19,55 @@ describe('Successful deposit', () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         expect(response.status).toBe(201)
     })
     it('should return a correct account ID', async () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         const deposit = response.body as DepositResponse
+
         expect(deposit.accountId).toBe("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
     })
     it('should return the correct amount', async () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         const deposit = response.body as DepositResponse
+
         expect(deposit.amount).toBe(200.0)
     })
     it('should return an updated balance', async () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         const deposit = response.body as DepositResponse
+
         expect(deposit.balance).toBe(1200.0)
+    })
+    it('should save the new balance to the DB', async () => {
+        const response = await request(api.express)
+            .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+            .send({amount: 200.0})
+
+        const account = await db.getAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+
+        expect(account).not.toBeNull()
+        expect(account?.balance).toBe(1200.0)
+    })
+    it('should save the updated limit to the DB', async () => {
+        const response = await request(api.express)
+            .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+            .send({amount: 200.0})
+
+        const account = await db.getAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+
+        expect(account).not.toBeNull()
+        expect(account?.depositedToday).toBe(3200.0)
     })
     afterEach(async () => {
         db.removeAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
@@ -56,12 +83,14 @@ describe('Deposits exceeding daily limits', () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         expect(response.status).toBe(400)
     })
     it('should return a valid GenericError', async () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         expect(response.body).toEqual(expect.objectContaining({
             errorCode: expect.any(String),
             errorMessage: expect.any(String),
@@ -71,8 +100,19 @@ describe('Deposits exceeding daily limits', () => {
         const response = await request(api.express)
             .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
             .send({amount: 200.0})
+
         expect(response.body).toHaveProperty("errorCode")
         expect(response.body.errorCode).toBe("depositLimitExceeded")
+    })
+    it('should not modify the DB', async () => {
+        const response = await request(api.express)
+            .post("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+            .send({amount: 200.0})
+
+        const account = await db.getAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+
+        expect(account).not.toBeNull()
+        expect(account?.balance).toBe(1000.0)
     })
     afterEach(async () => {
         db.removeAccount("8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
@@ -84,12 +124,14 @@ describe('Deposits for non-existing accounts', () => {
         const response = await request(api.express)
             .post("/deposit/2bacbabe-03bf-4f31-a5cb-55aa7bf950a1")
             .send({amount: 200.0})
+
         expect(response.status).toBe(400)
     })
     it('should return a valid GenericError', async () => {
         const response = await request(api.express)
             .post("/deposit/2bacbabe-03bf-4f31-a5cb-55aa7bf950a1")
             .send({amount: 200.0})
+
         expect(response.body).toEqual(expect.objectContaining({
             errorCode: expect.any(String),
             errorMessage: expect.any(String),
@@ -99,6 +141,7 @@ describe('Deposits for non-existing accounts', () => {
         const response = await request(api.express)
             .post("/deposit/2bacbabe-03bf-4f31-a5cb-55aa7bf950a1")
             .send({amount: 200.0})
+
         expect(response.body).toHaveProperty("errorCode")
         expect(response.body.errorCode).toBe("accountNotFound")
     })
@@ -108,6 +151,7 @@ describe('GET Deposit', () => {
     it('should not be available', async () => {
         const response = await request(api.express)
             .get("/deposit/8d54f81a-f889-4a89-b64f-5f9a8abb84ed")
+
         expect(response.status).toBe(404)
     })
 })

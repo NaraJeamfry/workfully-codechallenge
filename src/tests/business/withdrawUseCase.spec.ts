@@ -48,12 +48,12 @@ describe('Withdraw with overdraft', () => {
     })
     it('should return', async () => {
         const withdraw = await service.withdrawAccount(
-            "629c7c78-37c3-4031-974e-4b2af3ca2950", 100.0)
+            "629c7c78-37c3-4031-974e-4b2af3ca2950", 200.0)
         expect(withdraw).toBeDefined()
     })
     it('should return negative balance', async () => {
         const withdraw = await service.withdrawAccount(
-            "629c7c78-37c3-4031-974e-4b2af3ca2950", 100.0)
+            "629c7c78-37c3-4031-974e-4b2af3ca2950", 200.0)
         expect(withdraw.balance).toBe(-100.0)
     })
     afterEach(async () => {
